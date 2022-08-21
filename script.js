@@ -1,44 +1,39 @@
-const inputFile = document.querySelector('#picture-input');
-const pictureImage = document.querySelector('#picture-image');
-const pictureImageTXT = 'choose an image';
-// pictureImage.innerHTML = pictureImageTXT;
+const inputFile = document.querySelector("#picture-input");
+const pictureImage = document.querySelector("#picture-image");
+const pictureImageTXT = "choose an image";
 
-//escuta o evento de mudança no input
-inputFile.addEventListener('change', function(event) {
-    //captura o evento
-    const inputTarget = event.target;
+inputFile.addEventListener("change", (event) => {
+  if (pictureImage.childElementCount === 2) {
+      inputFile.disabled = true;
+  }
+  
+  const imageFile = event.target.files[0];
 
-    //files contém um array com os arquivos
-    const imageFile = inputTarget.files[0];
+  if (imageFile) {
+    const readerImage = new FileReader();
 
-    if (imageFile) {
-        //instância de FileReader
-        const readerImage = new FileReader();
+    readerImage.readAsDataURL(imageFile);
 
-        //adiciona a propriedade result do objeto FileReader os dados da imagem
-        readerImage.readAsDataURL(imageFile);
+    readerImage.addEventListener("load", function (event) {
+      const readerTarget = event.target;
 
-        readerImage.addEventListener('load', function(event) {
-            const readerTarget = event.target;
-            
-            pictureImage.appendChild(createElementImg({
-                atributeName: 'src',
-                                //resulta contém os dados da imagem
-                atributeValue: readerTarget.result,
-                className: 'picture-img'
-            }));
-        });
-
-    } else {
-        pictureImage.innerHTML = pictureImageTXT;
-    }
+      pictureImage.appendChild(
+        createElementImg({
+          atributeName: "src",
+          atributeValue: readerTarget.result,
+          className: "picture-img",
+        })
+      );
+    });
+  } else {
+    pictureImage.innerHTML = pictureImageTXT;
+  }
 });
 
-function createElementImg(objatributes)
-{
-    const img = document.createElement('img');
-    img.setAttribute(objatributes.atributeName, objatributes.atributeValue);
-    img.classList.add(objatributes.className);
+function createElementImg(objatributesTag) {
+  const img = document.createElement("img");
+  img.setAttribute(objatributesTag.atributeName, objatributesTag.atributeValue);
+  img.classList.add(objatributesTag.className);
 
-    return img;
+  return img;
 }
